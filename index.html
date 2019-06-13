@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 
 <html>
+    <meta charset="utf-8">
     <head>
         <script type="text/javascript" src='https://d3js.org/d3.v4.min.js'></script>
     </head>
 
     <Body>
        <h1>Baseball Hit Visualizer</h1> 
-       <div id='plot'></div>
+       <div id='launch_params'></div>
+       <div id ='field'></div>
 
        <script type="text/javascript">
-        const w = 500, h = 500, pad = 50;
+        const w1 = 500, h1 = 500, pad1 = 50;
 
-        const svg = d3.select("#plot").append("svg").attr("height", h).attr("width", w);
+        const svg = d3.select("#launch_params").append("svg").attr("height", h1).attr("width", w1);
 
-        const xScale = d3.scaleLinear().range([pad, w - pad]);
-        const yScale = d3.scaleLinear().range([h - pad, pad]);
+        const xScale = d3.scaleLinear().range([pad1, w1 - pad1]);
+        const yScale = d3.scaleLinear().range([h1 - pad1, pad1]);
 
         let launch_speed;
         let launch_angle;
 
 
-        const dataXY = d3.csv('2019-BB_Savant_Data.csv', (data) => {
+        const dataLaunch = d3.csv('2019-BB_Savant_Data.csv', (data) => {
             data.forEach((d) => {
                 d.launch_speed = +d.launch_speed;
                 d.launch_angle = +d.launch_angle;
@@ -43,18 +45,67 @@
                 .attr("r", (d) => {
                     return 3;
                 })
-                .attr("fill", "#00aa88");
+                .attr("fill", "#00aa44");
 
             svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(0," + (h - pad) + ")")
+                .attr("transform", "translate(0," + (h1 - pad1) + ")")
                 .call(d3.axisBottom(xScale));
 
             svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(" + pad + ", 0)")
+                .attr("transform", "translate(" + pad1 + ", 0)")
                 .call(d3.axisLeft(yScale));
         });
+
+        const w2 = 500, h2 = 500, pad2 = 50;
+
+        const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
+
+        const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
+        const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
+
+        let hc_x;
+        let hc_y;
+
+        const dataField = d3.csv('2019-BB_Savant_Data.csv', (data) => {
+            data.forEach((d) => {
+                d.hc_x = +d.hc_x;
+                d.hc_y = +d.hc_y;
+            });
+
+            xScaleField.domain([0, 250]);
+            yScaleField.domain([0, 250]);
+
+            svg2.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", (d) => {
+                    return xScaleField(d.hc_x);
+                })
+                .attr("cy", (d) => {
+                    return yScaleField(d.hc_y);
+                })
+                .attr("r", (d) => {
+                    return 3;
+                })
+                .attr("fill", "#00aa88");
+
+            svg2.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + (h2 - pad2) + ")")
+                .call(d3.axisBottom(xScaleField));
+
+            svg2.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + pad2 + ", 0)")
+                .call(d3.axisLeft(yScaleField));
+        });
+
+
+
+
     </script>
     </Body>
 
