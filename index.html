@@ -12,7 +12,7 @@
        <div id ='field'></div>
 
        <script type="text/javascript">
-        const w1 = 500, h1 = 500, pad1 = 50;
+        const w1 = 600, h1 = 600, pad1 = 50;
 
         const svg = d3.select("#launch_params").append("svg").attr("height", h1).attr("width", w1);
 
@@ -22,12 +22,27 @@
         let launch_speed;
         let launch_angle;
 
+        const w2 = 600, h2 = 600, pad2 = 50;
+
+        const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
+
+        const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
+        const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
+
+        let hc_x;
+        let hc_y;
+
 
         const dataLaunch = d3.csv('2019-BB_Savant_Data.csv', (data) => {
             data.forEach((d) => {
                 d.launch_speed = +d.launch_speed;
                 d.launch_angle = +d.launch_angle;
+                d.hc_x = +d.hc_x;
+                d.hc_y = +d.hc_y;
+                d.hit_distance_sc = +d.hit_distance_sc;
             });
+
+            //balls contacted and with launch angle and speed parameters
 
             xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
@@ -43,7 +58,7 @@
                     return yScale(d.launch_angle);
                 })
                 .attr("r", (d) => {
-                    return 3;
+                    return 2;
                 })
                 .attr("fill", "#00aa44");
 
@@ -56,39 +71,24 @@
                 .attr("class", "axis")
                 .attr("transform", "translate(" + pad1 + ", 0)")
                 .call(d3.axisLeft(yScale));
-        });
 
-        const w2 = 500, h2 = 500, pad2 = 50;
-
-        const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
-
-        const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
-        const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
-
-        let hc_x;
-        let hc_y;
-
-        const dataField = d3.csv('2019-BB_Savant_Data.csv', (data) => {
-            data.forEach((d) => {
-                d.hc_x = +d.hc_x;
-                d.hc_y = +d.hc_y;
-            });
-
-            xScaleField.domain([0, 250]);
-            yScaleField.domain([0, 250]);
+            // balls in play fielded location
+            xScaleField.domain([-130, 130]);
+            yScaleField.domain([0, 220]);
+    
 
             svg2.selectAll("circle")
                 .data(data)
                 .enter()
                 .append("circle")
                 .attr("cx", (d) => {
-                    return xScaleField(d.hc_x);
+                    return xScaleField((d.hc_x - 125.42));
                 })
                 .attr("cy", (d) => {
-                    return yScaleField(d.hc_y);
+                    return yScaleField((205 - d.hc_y));
                 })
                 .attr("r", (d) => {
-                    return 3;
+                    return 2;
                 })
                 .attr("fill", "#00aa88");
 
@@ -102,9 +102,6 @@
                 .attr("transform", "translate(" + pad2 + ", 0)")
                 .call(d3.axisLeft(yScaleField));
         });
-
-
-
 
     </script>
     </Body>
