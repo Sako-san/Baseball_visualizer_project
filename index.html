@@ -26,6 +26,8 @@
 
         const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
 
+        
+
         const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
         const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
 
@@ -40,6 +42,7 @@
                 d.hc_x = +d.hc_x;
                 d.hc_y = +d.hc_y;
                 d.hit_distance_sc = +d.hit_distance_sc;
+                d.bb_type
             });
 
             //balls contacted and with launch angle and speed parameters
@@ -58,7 +61,7 @@
                     return yScale(d.launch_angle);
                 })
                 .attr("r", (d) => {
-                    return 2;
+                    return 1.25;
                 })
                 .attr("fill", "#00aa44");
 
@@ -88,9 +91,19 @@
                     return yScaleField((205 - d.hc_y));
                 })
                 .attr("r", (d) => {
-                    return 2;
+                    return 1.25;
                 })
-                .attr("fill", "#00aa88");
+                .attr("fill", (d) => {
+                    if( d.bb_type === 'ground_ball') {
+                        return "#0000FF"
+                    } else if (d.bb_type === 'line_drive') {
+                        return "#00aa88"
+                    } else if (d.bb_type === 'fly_ball') {
+                       return "#FFA500"
+                    } else {
+                       return "#E0FFFF"
+                    };
+                });
 
             svg2.append("g")
                 .attr("class", "axis")
