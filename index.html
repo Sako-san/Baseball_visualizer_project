@@ -11,31 +11,51 @@
        <h1>Baseball Hit Visualizer</h1> 
        <div id='launch_params'></div>
        <div id ='field'></div>
+        <div class="control-group">
+            <button onclick="select('single')">
+                Singles
+            </button>
+            <button onclick="select('double')">
+                Doubles
+            </button>
+            <button onclick="select('triple')">
+                Triples
+            </button>
+            <button onclick="select('home_run')">
+                Homeruns
+            </button>
+            <button onclick="select('field_out')">
+                Outs
+            </button>
+            <button onclick="select('field_error')">
+                Errors
+            </button>
+            <button onclick="select()">
+                Clear
+            </button>
+        </div>
 
        <script type="text/javascript">
         const w1 = 600, h1 = 600, pad1 = 50;
+        const w2 = 600, h2 = 600, pad2 = 50;
+
+        const yAxisLab = h1 / 2;
 
         const svg = d3.select("#launch_params").append("svg").attr("height", h1).attr("width", w1);
+        const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
 
         const xScale = d3.scaleLinear().range([pad1, w1 - pad1]);
         const yScale = d3.scaleLinear().range([h1 - pad1, pad1]);
-
-        let launch_speed;
-        let launch_angle;
-
-        const w2 = 600, h2 = 600, pad2 = 50;
-
-        const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
-
-
         const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
         const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
 
         let hc_x;
         let hc_y;
+        let launch_speed;
+        let launch_angle;
 
-
-        const dataLaunch = d3.csv('2019_FullSet.csv', (data) => {
+        const dataSet = d3.csv('2019_FullSet.csv', (data) => {
+            
             data.forEach((d) => {
                 d.launch_speed = +d.launch_speed;
                 d.launch_angle = +d.launch_angle;
@@ -52,7 +72,7 @@
             yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
 
             svg.selectAll("circle")
-                .data(data)
+                .data(data.filter((d) => { return (d.launch_speed >= 0 && d.launch_angle >= -90); }))
                 .enter()
                 .append("circle")
                 .attr("cx", (d) => {
@@ -71,43 +91,54 @@
                 .attr("transform", "translate(0," + (h1 - pad1) + ")")
                 .call(d3.axisBottom(xScale));
 
+            svg.append("text")
+                .attr("transform", "translate(" + (w1 / 2) + " ," + (h1 - 5) + ")")
+                .style("text-anchor", "middle")
+                .text("Exit Velocity (mph)");
+
             svg.append("g")
                 .attr("class", "axis")
                 .attr("transform", "translate(" + pad1 + ", 0)")
                 .call(d3.axisLeft(yScale));
 
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 )
+                .attr("x", 0 - (h1 / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Launch Angle (degrees)");
+
             // balls in play fielded location
             xScaleField.domain([-130, 130]);
             yScaleField.domain([-30, 220]);
 
-
-                
-                svg2.selectAll("circle")
-                    .data(data)
-                    .enter()
-                    .append("circle")
-                    .attr("cx", (d) => {
-                        return xScaleField((d.hc_x - 125.42));
-                    })
-                    .attr("cy", (d) => {
-                        return yScaleField((205 - d.hc_y));
-                    })
-                    .attr("r", (d) => {
-                        return 1.25;
-                    })
-                    .attr("fill", (d) => {
-                        if( d.events === 'field_out') {
-                            return "#ff0000"
-                        } else if (d.events === 'single') {
-                            return "#33B5FF"
-                        } else if (d.events === 'double') {
+            svg2.selectAll("circle")
+                .data(data.filter( (d) => { return d.events !== 'field_out'}))
+                .enter()
+                .append("circle")
+                .attr("cx", (d) => {
+                    return xScaleField((d.hc_x - 125.42));
+                })
+                .attr("cy", (d) => {
+                    return yScaleField((205 - d.hc_y));
+                })
+                .attr("r", (d) => {
+                    return 1.25;
+                })
+                .attr("fill", (d) => {
+                    if( d.events === 'field_out') {
+                        return "#ff0000"
+                    } else if (d.events === 'single') {
+                        return "#33B5FF"
+                    } else if (d.events === 'double') {
                         return "#78AB46"
-                        } else if (d.events === 'triple') {
+                    } else if (d.events === 'triple') {
                         return "#E5E500"
-                        } else {
-                            return "#696969"
-                        };
-                    });
+                    } else if (d.events === 'home_run'){
+                        return "#C0C0C0"
+                    } else { return "#000000" };
+                });
 
             svg2.append("g")
                 .attr("class", "axis")
@@ -118,29 +149,10 @@
                 .attr("class", "axis")
                 .attr("transform", "translate(" + pad2 + ", 0)")
                 .call(d3.axisLeft(yScaleField));
+
         });
 
     </script>
-
-    <br><br>
-    <h3>Event Type</h3>
-    <form id="form" data-toggle="buttons">
-        <label>
-            <input id="singles" type="checkbox" class="checkbox" value="singles">Singles<br>
-        </label>
-        <label >
-            <input id="doubles" type="checkbox" class="checkbox" value="doubles">Doubles<br>
-        </label>
-        <label >
-            <input id="triples" type="checkbox" class="checkbox" value="triples">Triples<br>
-        </label>
-        <label >
-            <input id="homeruns" type="checkbox" class="checkbox" value="homeruns">Homeruns<br>
-        </label>
-        <label >
-            <input id="outs" type="checkbox" class="checkbox" value="outs">Outs<br>
-        </label>
-    </form>
     </Body>
 
 </html>
