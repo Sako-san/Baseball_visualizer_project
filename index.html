@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <head>
         <script type="text/javascript" src='https://d3js.org/d3.v4.min.js'></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     </head>
 
     <Body>
@@ -26,7 +27,6 @@
 
         const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
 
-        
 
         const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
         const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
@@ -35,7 +35,7 @@
         let hc_y;
 
 
-        const dataLaunch = d3.csv('2019-BB_Savant_Data.csv', (data) => {
+        const dataLaunch = d3.csv('2019_FullSet.csv', (data) => {
             data.forEach((d) => {
                 d.launch_speed = +d.launch_speed;
                 d.launch_angle = +d.launch_angle;
@@ -43,6 +43,7 @@
                 d.hc_y = +d.hc_y;
                 d.hit_distance_sc = +d.hit_distance_sc;
                 d.bb_type
+                d.events
             });
 
             //balls contacted and with launch angle and speed parameters
@@ -77,33 +78,36 @@
 
             // balls in play fielded location
             xScaleField.domain([-130, 130]);
-            yScaleField.domain([0, 220]);
-    
+            yScaleField.domain([-30, 220]);
 
-            svg2.selectAll("circle")
-                .data(data)
-                .enter()
-                .append("circle")
-                .attr("cx", (d) => {
-                    return xScaleField((d.hc_x - 125.42));
-                })
-                .attr("cy", (d) => {
-                    return yScaleField((205 - d.hc_y));
-                })
-                .attr("r", (d) => {
-                    return 1.25;
-                })
-                .attr("fill", (d) => {
-                    if( d.bb_type === 'ground_ball') {
-                        return "#0000FF"
-                    } else if (d.bb_type === 'line_drive') {
-                        return "#00aa88"
-                    } else if (d.bb_type === 'fly_ball') {
-                       return "#FFA500"
-                    } else {
-                       return "#E0FFFF"
-                    };
-                });
+
+                
+                svg2.selectAll("circle")
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", (d) => {
+                        return xScaleField((d.hc_x - 125.42));
+                    })
+                    .attr("cy", (d) => {
+                        return yScaleField((205 - d.hc_y));
+                    })
+                    .attr("r", (d) => {
+                        return 1.25;
+                    })
+                    .attr("fill", (d) => {
+                        if( d.events === 'field_out') {
+                            return "#ff0000"
+                        } else if (d.events === 'single') {
+                            return "#33B5FF"
+                        } else if (d.events === 'double') {
+                        return "#78AB46"
+                        } else if (d.events === 'triple') {
+                        return "#E5E500"
+                        } else {
+                            return "#696969"
+                        };
+                    });
 
             svg2.append("g")
                 .attr("class", "axis")
@@ -117,6 +121,26 @@
         });
 
     </script>
+
+    <br><br>
+    <h3>Event Type</h3>
+    <form id="form" data-toggle="buttons">
+        <label>
+            <input id="singles" type="checkbox" class="checkbox" value="singles">Singles<br>
+        </label>
+        <label >
+            <input id="doubles" type="checkbox" class="checkbox" value="doubles">Doubles<br>
+        </label>
+        <label >
+            <input id="triples" type="checkbox" class="checkbox" value="triples">Triples<br>
+        </label>
+        <label >
+            <input id="homeruns" type="checkbox" class="checkbox" value="homeruns">Homeruns<br>
+        </label>
+        <label >
+            <input id="outs" type="checkbox" class="checkbox" value="outs">Outs<br>
+        </label>
+    </form>
     </Body>
 
 </html>
