@@ -13,36 +13,36 @@
        <div id ='field'></div>
         <div class="control-group">
             <label>Single
-                <input type="checkbox" class="checkbox" value="single" checked>
+                <input type="checkbox" class="checkbox" value="single"  >
             </label>
             <label>Double
-                <input type="checkbox" class="checkbox" value="double" checked>
+                <input type="checkbox" class="checkbox" value="double"  >
             </label>
             <label>Triple
-                <input type="checkbox" class="checkbox" value="triple" checked>
+                <input type="checkbox" class="checkbox" value="triple"  >
             </label>
             <label>Homerun
-                <input type="checkbox" class="checkbox" value="home_run" checked>
+                <input type="checkbox" class="checkbox" value="home_run" >
             </label>
             <label>Out
-                <input type="checkbox" class="checkbox" value="field_out" checked>
+                <input type="checkbox" class="checkbox" value="field_out" >
             </label>
             <label>Error
-                <input type="checkbox" class="checkbox" value="field_error" checked>
+                <input type="checkbox" class="checkbox" value="field_error" >
             </label>
         </div>
 
        <script type="text/javascript">
-        // const w1 = 600, h1 = 600, pad1 = 50;
+        const w1 = 600, h1 = 600, pad1 = 50;
         const w2 = 600, h2 = 600, pad2 = 50;
 
-        // const yAxisLab = h1 / 2;
+        const yAxisLab = h1 / 2;
 
-        // const svg = d3.select("#launch_params").append("svg").attr("height", h1).attr("width", w1);
+        const svg = d3.select("#launch_params").append("svg").attr("height", h1).attr("width", w1);
         const svg2 = d3.select("#field").append("svg").attr("height", h2).attr("width", w2);
 
-        // const xScale = d3.scaleLinear().range([pad1, w1 - pad1]);
-        // const yScale = d3.scaleLinear().range([h1 - pad1, pad1]);
+        const xScale = d3.scaleLinear().range([pad1, w1 - pad1]);
+        const yScale = d3.scaleLinear().range([h1 - pad1, pad1]);
         const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
         const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
 
@@ -50,6 +50,13 @@
         let hc_y;
         let launch_speed;
         let launch_angle;
+
+        const myimage = svg2.append('image')
+                .attr('xlink:href', 'baseball_diamond.jpg')
+                .attr('width', 450)
+                .attr('height', 450)
+                .attr("transform", "translate(75,110)")
+
 
         const dataSet = d3.csv('2019_FullSet.csv', (data) => {
             
@@ -89,77 +96,108 @@
                     } else { return "#000000" };
                 });
             
-            svg2.append("g")
-                .attr("class", "axis")
-                .attr("transform", "translate(0," + (h2 - pad2) + ")")
-                .call(d3.axisBottom(xScaleField));
+            // svg2.append("g")
+            //     .attr("class", "axis")
+            //     .attr("transform", "translate(0," + (h2 - pad2) + ")")
+            //     .call(d3.axisBottom(xScaleField));
 
-            svg2.append("g")
-                .attr("class", "axis")
-                .attr("transform", "translate(" + pad2 + ", 0)")
-                .call(d3.axisLeft(yScaleField));
+            // svg2.append("g")
+            //     .attr("class", "axis")
+            //     .attr("transform", "translate(" + pad2 + ", 0)")
+            //     .call(d3.axisLeft(yScaleField));
 
             const updateData = () => {
-                console.log(data);
+                svg2.selectAll("circle").remove();
 
-                d3.selectAll("checkbox").each( (d) => {
-                    cb = d3.select(this);
-                    event = cb.property("value");
-                    console.log(event);
-                    if(cb.property("checked")){
-                        svg2.selectAll("." + event).transition().duration(1000).style("opacity", 1).attr("r", 1.25)
-                    } else {
-                        svg2.selectAll("." + event).transition().duration(1000).style("opacity", 0).attr("r", 0)
-                    }
-                })
-            }
+                const checkboxes = d3.selectAll(".checkbox").nodes()
+                checkboxes.forEach( (box) => {
+                    if(box.checked){
+
+                        console.log(box.value)
+                        svg2.selectAll("circles")
+                            .data(data.filter( (d) => { if( d.events === box.value) {return d.events} }))
+                            .enter()
+                            .append("circle")
+                            .attr("class", (d) => { return d.events; })
+                            .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
+                            .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
+                            .attr("r", (d) => { return 1.25; })
+                            .attr("fill", (d) => {
+                                if (d.events === 'field_out') {
+                                    return "#ff0000"
+                                } else if (d.events === 'single') {
+                                    return "#33B5FF"
+                                } else if (d.events === 'double') {
+                                    return "#78AB46"
+                                } else if (d.events === 'triple') {
+                                    return "#E5E500"
+                                } else if (d.events === 'home_run') {
+                                    return "#C0C0C0"
+                                } else { return "#000000" };
+                        });
+                    };
+                });
+                
+            };
 
             d3.selectAll(".checkbox").on("change", updateData);
             updateData();
             
 
-            //balls contacted and with launch angle and speed parameters
+            // balls contacted and with launch angle and speed parameters
 
-            // xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
-            // yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
+            xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
+            yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
 
-            // svg.selectAll("circle")
-            //     .data(data.filter((d) => { return (d.launch_speed >= 0 && d.launch_angle >= -90); }))
-            //     .enter()
-            //     .append("circle")
-            //     .attr("cx", (d) => {
-            //         return xScale(d.launch_speed);
-            //     })
-            //     .attr("cy", (d) => {
-            //         return yScale(d.launch_angle);
-            //     })
-            //     .attr("r", (d) => {
-            //         return 1.25;
-            //     })
-            //     .attr("fill", "#00aa44");
+            svg.selectAll("circle")
+                .data(data.filter((d) => { if( d.events !== 'field_out' && d.events !== 'field_error'){return d.events} }))
+                .enter()
+                .append("circle")
+                .attr("cx", (d) => {
+                    return xScale(d.launch_speed);
+                })
+                .attr("cy", (d) => {
+                    return yScale(d.launch_angle);
+                })
+                .attr("r", (d) => {
+                    return 1.25;
+                })
+                .attr("fill", (d) => {
+                    if (d.events === 'field_out') {
+                        return "#ff0000"
+                    } else if (d.events === 'single') {
+                        return "#33B5FF"
+                    } else if (d.events === 'double') {
+                        return "#78AB46"
+                    } else if (d.events === 'triple') {
+                        return "#E5E500"
+                    } else if (d.events === 'home_run') {
+                        return "#C0C0C0"
+                    } else { return "#000000" };
+                });
 
-            // svg.append("g")
-            //     .attr("class", "axis")
-            //     .attr("transform", "translate(0," + (h1 - pad1) + ")")
-            //     .call(d3.axisBottom(xScale));
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + (h1 - pad1) + ")")
+                .call(d3.axisBottom(xScale));
 
-            // svg.append("text")
-            //     .attr("transform", "translate(" + (w1 / 2) + " ," + (h1 - 5) + ")")
-            //     .style("text-anchor", "middle")
-            //     .text("Exit Velocity (mph)");
+            svg.append("text")
+                .attr("transform", "translate(" + (w1 / 2) + " ," + (h1 - 5) + ")")
+                .style("text-anchor", "middle")
+                .text("Exit Velocity (mph)");
 
-            // svg.append("g")
-            //     .attr("class", "axis")
-            //     .attr("transform", "translate(" + pad1 + ", 0)")
-            //     .call(d3.axisLeft(yScale));
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + pad1 + ", 0)")
+                .call(d3.axisLeft(yScale));
 
-            // svg.append("text")
-            //     .attr("transform", "rotate(-90)")
-            //     .attr("y", 0 )
-            //     .attr("x", 0 - (h1 / 2))
-            //     .attr("dy", "1em")
-            //     .style("text-anchor", "middle")
-            //     .text("Launch Angle (degrees)");
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 )
+                .attr("x", 0 - (h1 / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Launch Angle (degrees)");
 
         });
     </script>
