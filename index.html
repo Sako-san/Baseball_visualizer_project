@@ -8,9 +8,10 @@
     </head>
 
     <Body>
-       <h1>Baseball Hit Visualizer</h1> 
-       <div id='launch_params'></div>
-       <div id ='field'></div>
+        <h1>Baseball Hit Visualizer</h1> 
+        <section id=team1>
+        <div id='launch_params'></div>
+        <div id ='field'></div>
         <div class="control-group">
             <label>Single
                 <input type="checkbox" class="checkbox" value="single"  >
@@ -31,6 +32,32 @@
                 <input type="checkbox" class="checkbox" value="field_error" >
             </label>
         </div>
+    </section>
+
+    <section id=team2>
+        <div id='launch_params2'></div>
+        <div id='field2'></div>
+        <div class="control-group2">
+            <!-- <label>Single
+                <input type="checkbox" class="checkbox" value="single">
+            </label>
+            <label>Double
+                <input type="checkbox" class="checkbox" value="double">
+            </label>
+            <label>Triple
+                <input type="checkbox" class="checkbox" value="triple">
+            </label>
+            <label>Homerun
+                <input type="checkbox" class="checkbox" value="home_run">
+            </label>
+            <label>Out
+                <input type="checkbox" class="checkbox" value="field_out">
+            </label>
+            <label>Error
+                <input type="checkbox" class="checkbox" value="field_error">
+            </label> -->
+        </div>
+    </section>
 
        <script type="text/javascript">
         const w1 = 600, h1 = 600, pad1 = 50;
@@ -70,87 +97,11 @@
                 d.events
             });
 
-            // balls in play fielded location
-            xScaleField.domain([-130, 130]);
-            yScaleField.domain([-30, 220]);
-
-            svg2.selectAll("circles")
-                .data(data)
-                .enter()
-                .append("circle")
-                .attr("class", (d) => {return d.events; })
-                .attr("cx", (d) => {return xScaleField((d.hc_x - 125.42));})
-                .attr("cy", (d) => {return yScaleField((205 - d.hc_y));})
-                .attr("r", (d) => {return 1.25;})
-                .attr("fill", (d) => {
-                    if (d.events === 'field_out') {
-                        return "#ff0000"
-                    } else if (d.events === 'single') {
-                        return "#33B5FF"
-                    } else if (d.events === 'double') {
-                        return "#78AB46"
-                    } else if (d.events === 'triple') {
-                        return "#E5E500"
-                    } else if (d.events === 'home_run') {
-                        return "#C0C0C0"
-                    } else { return "#000000" };
-                });
-            
-            // svg2.append("g")
-            //     .attr("class", "axis")
-            //     .attr("transform", "translate(0," + (h2 - pad2) + ")")
-            //     .call(d3.axisBottom(xScaleField));
-
-            // svg2.append("g")
-            //     .attr("class", "axis")
-            //     .attr("transform", "translate(" + pad2 + ", 0)")
-            //     .call(d3.axisLeft(yScaleField));
-
-            const updateData = () => {
-                svg2.selectAll("circle").remove();
-
-                const checkboxes = d3.selectAll(".checkbox").nodes()
-                checkboxes.forEach( (box) => {
-                    if(box.checked){
-
-                        console.log(box.value)
-                        svg2.selectAll("circles")
-                            .data(data.filter( (d) => { if( d.events === box.value) {return d.events} }))
-                            .enter()
-                            .append("circle")
-                            .attr("class", (d) => { return d.events; })
-                            .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
-                            .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
-                            .attr("r", (d) => { return 1.25; })
-                            .attr("fill", (d) => {
-                                if (d.events === 'field_out') {
-                                    return "#ff0000"
-                                } else if (d.events === 'single') {
-                                    return "#33B5FF"
-                                } else if (d.events === 'double') {
-                                    return "#78AB46"
-                                } else if (d.events === 'triple') {
-                                    return "#E5E500"
-                                } else if (d.events === 'home_run') {
-                                    return "#C0C0C0"
-                                } else { return "#000000" };
-                        });
-                    };
-                });
-                
-            };
-
-            d3.selectAll(".checkbox").on("change", updateData);
-            updateData();
-            
-
-            // balls contacted and with launch angle and speed parameters
-
             xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
 
             svg.selectAll("circle")
-                .data(data.filter((d) => { if( d.events !== 'field_out' && d.events !== 'field_error'){return d.events} }))
+                .data(data)
                 .enter()
                 .append("circle")
                 .attr("cx", (d) => {
@@ -193,12 +144,103 @@
 
             svg.append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 0 )
+                .attr("y", 0)
                 .attr("x", 0 - (h1 / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Launch Angle (degrees)");
 
+
+            // balls in play fielded location
+            xScaleField.domain([-130, 130]);
+            yScaleField.domain([-30, 220]);
+
+            svg2.selectAll("circles")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", (d) => {return d.events; })
+                .attr("cx", (d) => {return xScaleField((d.hc_x - 125.42));})
+                .attr("cy", (d) => {return yScaleField((205 - d.hc_y));})
+                .attr("r", (d) => {return 1.25;})
+                .attr("fill", (d) => {
+                    if (d.events === 'field_out') {
+                        return "#ff0000"
+                    } else if (d.events === 'single') {
+                        return "#33B5FF"
+                    } else if (d.events === 'double') {
+                        return "#78AB46"
+                    } else if (d.events === 'triple') {
+                        return "#E5E500"
+                    } else if (d.events === 'home_run') {
+                        return "#C0C0C0"
+                    } else { return "#000000" };
+                });
+
+            const updateData = () => {
+                svg.selectAll("circle").remove();
+                svg2.selectAll("circle").remove();
+
+                const checkboxes = d3.selectAll(".checkbox").nodes()
+                checkboxes.forEach( (box) => {
+                    if(box.checked){
+
+                        svg.selectAll("circles")
+                            .data(data.filter((d) => { if (d.events === box.value) { return d } }))
+                            .enter()
+                            .append("circle")
+                            .attr("class", (d) => { return d; })
+                            .attr("cx", (d) => {
+                                return xScale(d.launch_speed);
+                            })
+                            .attr("cy", (d) => {
+                                return yScale(d.launch_angle);
+                            })
+                            .attr("r", (d) => {
+                                return 1.25;
+                            })
+                            .attr("fill", (d) => {
+                                if (d.events === 'field_out') {
+                                    return "#ff0000"
+                                } else if (d.events === 'single') {
+                                    return "#33B5FF"
+                                } else if (d.events === 'double') {
+                                    return "#78AB46"
+                                } else if (d.events === 'triple') {
+                                    return "#E5E500"
+                                } else if (d.events === 'home_run') {
+                                    return "#C0C0C0"
+                                } else { return "#000000" };
+                            });
+
+                        svg2.selectAll("circles")
+                            .data(data.filter( (d) => { if( d.events === box.value) {return d.events} }))
+                            .enter()
+                            .append("circle")
+                            .attr("class", (d) => { return d.events; })
+                            .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
+                            .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
+                            .attr("r", (d) => { return 1.25; })
+                            .attr("fill", (d) => {
+                                if (d.events === 'field_out') {
+                                    return "#ff0000"
+                                } else if (d.events === 'single') {
+                                    return "#33B5FF"
+                                } else if (d.events === 'double') {
+                                    return "#78AB46"
+                                } else if (d.events === 'triple') {
+                                    return "#E5E500"
+                                } else if (d.events === 'home_run') {
+                                    return "#C0C0C0"
+                                } else { return "#000000" };
+                        });
+                    };
+                });
+                
+            };
+
+            d3.selectAll(".checkbox").on("change", updateData);
+            updateData();     
         });
     </script>
     </Body>
