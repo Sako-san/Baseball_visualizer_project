@@ -61,11 +61,9 @@
 
        <script type="text/javascript">
 
-        let teamsMLB = [];
-        let event = [];
-        teamsMLB = {};
+        let teamsMLB = {};
         let teamPlayers = {};
-
+        let roster = {};
  
 
         const w1 = 600, h1 = 600, pad1 = 50;
@@ -109,27 +107,95 @@
                     hc_x: +d.hc_x,
                     hc_y: +d.hc_y,
                     bb_type: d.bb_type,
-                    event: d.events
+                    event: d.events,
+                    date: d.game_date,
                     })            
             });
 
             for( let i = 0; i < BBIP.length; i++){
-                teamKey = BBIP[i].home;
-                playerKey = BBIP[i].player;
+                if (BBIP[i].inning === 'Bot' ){
+                    teamKey = BBIP[i].home;
+                    playerKey = BBIP[i].player;
 
-                if(!teamPlayers[playerKey]){
-                    teamPlayers[playerKey] = [];
-                }
-                teamPlayers[playerKey].push(BBIP[i])
+                    if(!teamPlayers[playerKey]){
+                        teamPlayers[playerKey] = [];
+                    }
+                    teamPlayers[playerKey].push(BBIP[i])
 
-                if(!teamsMLB[teamKey]){
-                    teamsMLB[teamKey] = []
+                    if(!teamsMLB[teamKey]){
+                        teamsMLB[teamKey] = [];
+                    }
+                    teamsMLB[teamKey][playerKey] = teamPlayers[playerKey];
+
+                } else {
+                    if (BBIP[i].inning === 'Top'){
+                        teamKey = BBIP[i].away;
+                        playerKey = BBIP[i].player;
+                        
+                        if (!teamPlayers[playerKey]) {
+                            teamPlayers[playerKey] = [];
+                        }
+                        teamPlayers[playerKey].push(BBIP[i])
+
+                        if (!teamsMLB[teamKey]) {
+                            teamsMLB[teamKey] = [];
+                        }
+                        teamsMLB[teamKey][playerKey] = teamPlayers[playerKey] ; 
+                    }
                 }
-                teamsMLB[teamKey].push(teamPlayers[playerKey])
             }
 
-            console.log(teamsMLB)
-            console.log(teamPlayers)
+            let AL = {
+                eastAL: {
+                   BAL: teamsMLB.BAL,
+                   BOS: teamsMLB.BOS,
+                   NYY: teamsMLB.NYY,
+                   TB: teamsMLB.TB,
+                   TOR: teamsMLB.TOR,
+                },
+                centralAL: {
+                    CWS: teamsMLB.CWS,
+                    CLE: teamsMLB.CLE,
+                    DET: teamsMLB.DET,
+                    KC: teamsMLB.KC,
+                    MIN: teamsMLB.MIN,
+                },
+                westAL: {
+                    HOU: teamsMLB.HOU,
+                    LAA: teamsMLB.LAA,
+                    OAK: teamsMLB.OAK,
+                    SEA: teamsMLB.SEA,
+                    TEX: teamsMLB.TEX,
+                }
+            }
+
+            let NL = {
+                eastNL: {
+                    ATL: teamsMLB.ATL,
+                    MIA: teamsMLB.MIA,
+                    NYM: teamsMLB.NYM,
+                    PHI: teamsMLB.PHI,
+                    WSH: teamsMLB.WSH,
+                },
+                centralNL: {
+                    CHC: teamsMLB.CHC,
+                    CIN: teamsMLB.CIN,
+                    MIL: teamsMLB.MIL,
+                    PIT: teamsMLB.PIT,
+                    STL: teamsMLB.STL,
+                },
+                westNL: {
+                    ARI: teamsMLB.ARI,
+                    COL: teamsMLB.COL,
+                    LAD: teamsMLB.LAD,
+                    SD: teamsMLB.SD,
+                    SF: teamsMLB.SF,
+                }
+            }
+
+            let MLB = { AL, NL };
+            
+            console.log(MLB)
 
             xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
