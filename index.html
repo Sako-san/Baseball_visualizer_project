@@ -61,116 +61,12 @@
 
        <script type="text/javascript">
 
-        let teamsMLB = {
-            AL: {
-                eastAL: {
-                    BAL: {
-                        players: []
-                    },
-                    BOS: {
-                        players: []
-                    },
-                    NYY: {
-                        players: []
-                    },
-                    TB: {
-                        players: []
-                    },
-                    TOR: {
-                        players: []
+        let teamsMLB = [];
+        let event = [];
+        teamsMLB = {};
+        let teamPlayers = {};
 
-                    }
-                },
-                centralAL: {
-                    CWS: {
-                        players: []
-                    },
-                    CLE: {
-                        players: []
-                    },
-                    DET: {
-                        players: []
-                    },
-                    KC: {
-                        players: []
-                    },
-                    MIN: {
-                        players: []
-                    }
-                },
-                westAL: {
-                    HOU: {
-                        players: []
-                    },
-                    LAA: {
-                        players: []
-                    },
-                    OAK: {
-                        players: []
-                    },
-                    SEA: {
-                        players: []
-                    },
-                    TEX: {
-                        players: []
-                    }
-
-                }
-            },
-            NL: {
-                eastNL: {
-                    ATL: {
-                        players: []
-                    },
-                    MIA: {
-                        players: []
-                    },
-                    MYM: {
-                        players: []
-                    },
-                    PHI: {
-                        players: []
-                    },
-                    WSH: {
-                        players: []
-                    }
-                },
-                centralNL: {
-                    CHC: {
-                        players: []
-                    },
-                    CIN: {
-                        players: []
-                    },
-                    MIL: {
-                        players: []
-                    },
-                    PIT: {
-                        players: []
-                    },
-                    STL: {
-                        players: []
-                    }
-                },
-                westNL: {
-                    ARI: {
-                        players: []
-                    },
-                    COL: {
-                        players: []
-                    },
-                    LAD: {
-                        players: []
-                    },
-                    SD: {
-                        players: []
-                    },
-                    SF: {
-                        players: []
-                    }
-                }
-            }
-        }
+ 
 
         const w1 = 600, h1 = 600, pad1 = 50;
         const w2 = 600, h2 = 600, pad2 = 50;
@@ -201,14 +97,39 @@
 
 
         const dataSet = d3.csv('2019_FullSet.csv', (data) => {
-            
+            let BBIP = [];
             data.forEach((d) => {
-                if( d.inning_topbot === 'Bot') {
-                    if( teamsMLB.AL.eastAL.includes(d.home_team)){console.log(d.home_team)}
-                }
+                BBIP.push({
+                    player: d.player_name,
+                    inning: d.inning_topbot,
+                    home: d.home_team,
+                    away: d.away_team,
+                    launch_angle: +d.launch_angle,
+                    launch_speed: +d.launch_speed,
+                    hc_x: +d.hc_x,
+                    hc_y: +d.hc_y,
+                    bb_type: d.bb_type,
+                    event: d.events
+                    })            
             });
 
-            
+            for( let i = 0; i < BBIP.length; i++){
+                teamKey = BBIP[i].home;
+                playerKey = BBIP[i].player;
+
+                if(!teamPlayers[playerKey]){
+                    teamPlayers[playerKey] = [];
+                }
+                teamPlayers[playerKey].push(BBIP[i])
+
+                if(!teamsMLB[teamKey]){
+                    teamsMLB[teamKey] = []
+                }
+                teamsMLB[teamKey].push(teamPlayers[playerKey])
+            }
+
+            console.log(teamsMLB)
+            console.log(teamPlayers)
 
             xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
