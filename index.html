@@ -9,36 +9,14 @@
 
     <Body>
         <h1>Baseball Hit Visualizer</h1> 
-        <section id=team1>
-        <div id='launch_params'></div>
-        <div id ='field'></div>
+        <select id="league-select">
+            <option value=MLB>MLB</option>
+            <option value="MLB['AL']">American League</option>
+            <option value="MLB['NL']">National League</option>
+        </select>
+
         <div class="control-group">
             <label>Single
-                <input type="checkbox" class="checkbox" value="single"  >
-            </label>
-            <label>Double
-                <input type="checkbox" class="checkbox" value="double"  >
-            </label>
-            <label>Triple
-                <input type="checkbox" class="checkbox" value="triple"  >
-            </label>
-            <label>Homerun
-                <input type="checkbox" class="checkbox" value="home_run" >
-            </label>
-            <label>Out
-                <input type="checkbox" class="checkbox" value="field_out" >
-            </label>
-            <label>Error
-                <input type="checkbox" class="checkbox" value="field_error" >
-            </label>
-        </div>
-    </section>
-
-    <section id=team2>
-        <div id='launch_params2'></div>
-        <div id='field2'></div>
-        <div class="control-group2">
-            <!-- <label>Single
                 <input type="checkbox" class="checkbox" value="single">
             </label>
             <label>Double
@@ -55,8 +33,12 @@
             </label>
             <label>Error
                 <input type="checkbox" class="checkbox" value="field_error">
-            </label> -->
+            </label>
         </div>
+        <section id=team1>
+        <div id='launch_params'></div>
+        <div id ='field'></div>
+
     </section>
 
        <script type="text/javascript">
@@ -78,7 +60,8 @@
         const yScale = d3.scaleLinear().range([h1 - pad1, pad1]);
         const xScaleField = d3.scaleLinear().range([pad2, w2 - pad2]);
         const yScaleField = d3.scaleLinear().range([h2 - pad2, pad2]);
-
+        
+        let selectedData;
         let hc_x;
         let hc_y;
         let launch_speed;
@@ -194,14 +177,69 @@
             }
 
             let MLB = { AL, NL };
-            
-            console.log(MLB)
+            let teams = [];
+            let playerEvents = [];
+            let leagues = [];
+            let plays = [];
 
-            xScale.domain(d3.extent(data, (d) => { return d.launch_speed }));
-            yScale.domain([d3.min(data, (d) => { return d.launch_angle }), d3.max(data, (d) => { return d.launch_angle })]);
+            if (document.getElementById('league-select').value === "MLB['AL']"){
+                let divisions = Object.values(MLB['AL']);
+
+                divisions.forEach( (div) => {
+                    teams.push(Object.values(div))
+                })
+
+                teams.forEach( roster => {
+                    roster.forEach( playerEvent => {
+                        playerEvents.push(Object.values(playerEvent))
+                    })
+                })
+                selectedData = playerEvents;
+
+            } else if (document.getElementById('league-select').value === "MLB['NL']") {
+                    let divisions = Object.values(MLB['NL']);
+
+                    divisions.forEach((div) => {
+                        teams.push(Object.values(div))
+                    })
+
+                    teams.forEach(roster => {
+                        roster.forEach(playerEvent => {
+                            playerEvents.push(Object.values(playerEvent))
+                        })
+                    })
+                    selectedData = playerEvents;
+
+            } else {
+                let divisions = [];
+                leagues = Object.values(MLB);
+                leagues.forEach( league => {
+                    divisions.push(Object.values(league))
+                })
+
+                divisions.forEach( div => {
+                    div.forEach( team => {
+                        teams.push(Object.values(team))
+                    })
+                })
+
+                teams.forEach(roster => {
+                    roster.forEach(playerEvent => {
+                        playerEvents.push(Object.values(playerEvent))
+                    })
+                })
+                selectedData = playerEvents;
+            }
+            
+            console.log(data)
+            selectedData = selectedData.flat(2)
+            console.log(selectedData)
+            
+            xScale.domain(d3.extent(selectedData, (d) => { return d.launch_speed }));
+            yScale.domain([d3.min(selectedData, (d) => { return d.launch_angle }), d3.max(selectedData, (d) => { return d.launch_angle })]);
 
             svg.selectAll("circle")
-                .data(data)
+                .data(selectedData)
                 .enter()
                 .append("circle")
                 .attr("cx", (d) => {
@@ -214,15 +252,15 @@
                     return 1.25;
                 })
                 .attr("fill", (d) => {
-                    if (d.events === 'field_out') {
+                    if (d.event === 'field_out') {
                         return "#ff0000"
-                    } else if (d.events === 'single') {
+                    } else if (d.event === 'single') {
                         return "#33B5FF"
-                    } else if (d.events === 'double') {
+                    } else if (d.event === 'double') {
                         return "#78AB46"
-                    } else if (d.events === 'triple') {
+                    } else if (d.event === 'triple') {
                         return "#E5E500"
-                    } else if (d.events === 'home_run') {
+                    } else if (d.event === 'home_run') {
                         return "#C0C0C0"
                     } else { return "#000000" };
                 });
@@ -259,20 +297,20 @@
                 .data(data)
                 .enter()
                 .append("circle")
-                .attr("class", (d) => {return d.events; })
+                .attr("class", (d) => {return d.event; })
                 .attr("cx", (d) => {return xScaleField((d.hc_x - 125.42));})
                 .attr("cy", (d) => {return yScaleField((205 - d.hc_y));})
                 .attr("r", (d) => {return 1.25;})
                 .attr("fill", (d) => {
-                    if (d.events === 'field_out') {
+                    if (d.event === 'field_out') {
                         return "#ff0000"
-                    } else if (d.events === 'single') {
+                    } else if (d.event === 'single') {
                         return "#33B5FF"
-                    } else if (d.events === 'double') {
+                    } else if (d.event === 'double') {
                         return "#78AB46"
-                    } else if (d.events === 'triple') {
+                    } else if (d.event === 'triple') {
                         return "#E5E500"
-                    } else if (d.events === 'home_run') {
+                    } else if (d.event === 'home_run') {
                         return "#C0C0C0"
                     } else { return "#000000" };
                 });
@@ -286,7 +324,7 @@
                     if(box.checked){
 
                         svg.selectAll("circles")
-                            .data(data.filter((d) => { if (d.events === box.value) { return d } }))
+                            .data(selectedData.filter((d) => { if (d.event === box.value) { return d } }))
                             .enter()
                             .append("circle")
                             .attr("class", (d) => { return d; })
@@ -300,40 +338,40 @@
                                 return 1.25;
                             })
                             .attr("fill", (d) => {
-                                if (d.events === 'field_out') {
+                                if (d.event === 'field_out') {
                                     return "#ff0000"
-                                } else if (d.events === 'single') {
+                                } else if (d.event === 'single') {
                                     return "#33B5FF"
-                                } else if (d.events === 'double') {
+                                } else if (d.event === 'double') {
                                     return "#78AB46"
-                                } else if (d.events === 'triple') {
+                                } else if (d.event === 'triple') {
                                     return "#E5E500"
-                                } else if (d.events === 'home_run') {
+                                } else if (d.event === 'home_run') {
                                     return "#C0C0C0"
                                 } else { return "#000000" };
                             });
 
                         svg2.selectAll("circles")
-                            .data(data.filter( (d) => { if( d.events === box.value) {return d.events} }))
+                            .data(selectedData.filter( (d) => { if( d.event === box.value) {return d.event} }))
                             .enter()
                             .append("circle")
-                            .attr("class", (d) => { return d.events; })
+                            .attr("class", (d) => { return d.event; })
                             .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
                             .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
                             .attr("r", (d) => { return 1.25; })
                             .attr("fill", (d) => {
-                                if (d.events === 'field_out') {
+                                if (d.event === 'field_out') {
                                     return "#ff0000"
-                                } else if (d.events === 'single') {
+                                } else if (d.event === 'single') {
                                     return "#33B5FF"
-                                } else if (d.events === 'double') {
+                                } else if (d.event === 'double') {
                                     return "#78AB46"
-                                } else if (d.events === 'triple') {
+                                } else if (d.event === 'triple') {
                                     return "#E5E500"
-                                } else if (d.events === 'home_run') {
+                                } else if (d.event === 'home_run') {
                                     return "#C0C0C0"
                                 } else { return "#000000" };
-                        });
+                            });
                     };
                 });
                 
