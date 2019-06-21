@@ -10,9 +10,18 @@
     <Body>
         <h1>Baseball Hit Visualizer</h1> 
         <select id="league-select">
-            <option value=MLB>MLB</option>
+            <option value="MLB">MLB</option>
             <option value="MLB['AL']">American League</option>
             <option value="MLB['NL']">National League</option>
+        </select>
+
+        <select id="division-select">
+            <option value="MLB['AL']['eastAL']">AL East</option>
+            <option value="MLB['AL']['centralAL']">AL Central</option>
+            <option value="MLB['AL']['westAL']">AL West</option>
+            <option value="MLB['NL']['eastNL']">NL East</option>
+            <option value="MLB['NL']['centralNL']">NL Central</option>
+            <option value="MLB['NL']['westNL']">NL West</option>
         </select>
 
         <div class="control-group">
@@ -189,26 +198,87 @@
                     teams.push(Object.values(div))
                 })
 
-                teams.forEach( roster => {
-                    roster.forEach( playerEvent => {
-                        playerEvents.push(Object.values(playerEvent))
+                if  (document.getElementById('division-select').value === "MLB['AL']['eastAL']"){
+
+                    let division = Object.values(MLB['AL']['eastAL'])
+
+                    division.forEach( roster => {
+                        playerEvents = Object.values(roster).flat(2)
                     })
-                })
-                selectedData = playerEvents;
+                    
+                    selectedData = playerEvents;
+                    
+                } else if (document.getElementById('division-select').value === "MLB['AL']['centralAL']"){
+                    let division = Object.values(MLB['AL']['centralAL'])
+
+                    division.forEach(roster => {
+                        playerEvents = Object.values(roster).flat(2)
+                    })
+
+                    selectedData = playerEvents;
+
+                } else if (document.getElementById('division-select').value === "MLB['AL']['westAL']") {
+                    let division = Object.values(MLB['AL']['westAL'])
+
+                    division.forEach(roster => {
+                        playerEvents = Object.values(roster).flat(2)
+                    })
+
+                    selectedData = playerEvents;
+
+                } else {
+                      teams.forEach(roster => {
+                        roster.forEach(playerEvent => {
+                            playerEvents.push(Object.values(playerEvent))
+                        })
+                    })
+                    selectedData = playerEvents;
+                }
+
 
             } else if (document.getElementById('league-select').value === "MLB['NL']") {
                     let divisions = Object.values(MLB['NL']);
 
-                    divisions.forEach((div) => {
-                        teams.push(Object.values(div))
+                divisions.forEach((div) => {
+                    teams.push(Object.values(div))
+                })
+
+                if (document.getElementById('division-select').value === "MLB['NL']['eastNL']") {
+
+                    let division = Object.values(MLB['NL']['eastNL'])
+
+                    division.forEach(roster => {
+                        playerEvents = Object.values(roster).flat(2)
                     })
 
+                    selectedData = playerEvents;
+
+                } else if (document.getElementById('division-select').value === "MLB['NL']['centralNL']") {
+                    let division = Object.values(MLB['NL']['centralNL'])
+
+                    division.forEach(roster => {
+                        playerEvents = Object.values(roster).flat(2)
+                    })
+
+                    selectedData = playerEvents;
+
+                } else if (document.getElementById('division-select').value === "MLB['NL']['westNL']") {
+                    let division = Object.values(MLB['NL']['westNL'])
+
+                    division.forEach(roster => {
+                        playerEvents = Object.values(roster).flat(2)
+                    })
+
+                    selectedData = playerEvents;
+
+                } else {
                     teams.forEach(roster => {
                         roster.forEach(playerEvent => {
                             playerEvents.push(Object.values(playerEvent))
                         })
                     })
                     selectedData = playerEvents;
+                }
 
             } else {
                 let divisions = [];
@@ -231,9 +301,7 @@
                 selectedData = playerEvents;
             }
             
-            console.log(data)
-            selectedData = selectedData.flat(2)
-            console.log(selectedData)
+            // console.log(selectedData.flat(2))
             
             xScale.domain(d3.extent(selectedData, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(selectedData, (d) => { return d.launch_angle }), d3.max(selectedData, (d) => { return d.launch_angle })]);
