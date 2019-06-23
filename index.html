@@ -5,24 +5,76 @@
     <head>
         <script type="text/javascript" src='https://d3js.org/d3.v4.min.js'></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <link rel="stylesheet" href="style.css">
     </head>
 
     <Body>
         <h1>Baseball Hit Visualizer</h1> 
-        <select id="league-select">
-            <option value="MLB">MLB</option>
-            <option value="MLB['AL']">American League</option>
-            <option value="MLB['NL']">National League</option>
-        </select>
+                <input type='radio' id="rad1" name='league-select' class='league-select' value="MLB">MLB
+                <br>
+                <input type='radio' id="rad2" name='league-select' class='league-select' value="MLB['AL']">AL
 
-        <select id="division-select">
-            <option value="MLB['AL']['eastAL']">AL East</option>
-            <option value="MLB['AL']['centralAL']">AL Central</option>
-            <option value="MLB['AL']['westAL']">AL West</option>
-            <option value="MLB['NL']['eastNL']">NL East</option>
-            <option value="MLB['NL']['centralNL']">NL Central</option>
-            <option value="MLB['NL']['westNL']">NL West</option>
-        </select>
+                <select id="division-select1">
+                    <option value="">--select--</option>
+                    <option value="MLB['AL']['eastAL']">AL East</option>
+                    <option value="MLB['AL']['centralAL']">AL Central</option>
+                    <option value="MLB['AL']['westAL']">AL West</option>
+                </select>
+
+                <select id="team-select1">
+                    <option value="">--select--</option>
+                    <option value="MLB['AL']['eastAL'].BAL">BAL</option>
+                    <option value="MLB['AL']['eastAL'].BOS">BOS</option>
+                    <option value="MLB['AL']['eastAL'].NYY">NYY</option>
+                    <option value="MLB['AL']['eastAL'].TB">TB</option>
+                    <option value="MLB['AL']['eastAL'].TOR">TOR</option>
+                    <option value="MLB['AL']['centralAL'].CWS">CWS</option>
+                    <option value="MLB['AL']['centralAL'].KC">KC</option>
+                    <option value="MLB['AL']['centralAL'].DET">DET</option>
+                    <option value="MLB['AL']['centralAL'].MIN">MIN</option>
+                    <option value="MLB['AL']['centralAL'].CLE">CLE</option>
+                    <option value="MLB['AL']['westAL'].HOU">HOU</option>
+                    <option value="MLB['AL']['westAL'].TEX">TEX</option>
+                    <option value="MLB['AL']['westAL'].LAA">LAA</option>
+                    <option value="MLB['AL']['westAL'].SEA">SEA</option>
+                    <option value="MLB['AL']['westAL'].OAK">OAK</option>
+                </select>
+
+                <br>
+                <input type='radio' id="rad3" name='league-select' class='league-select' value="MLB['NL']">NL
+
+                <select id="division-select2">
+                    <option value="">--select--</option>
+                    <option value="MLB['NL']['eastNL']">NL East</option>
+                    <option value="MLB['NL']['centralNL']">NL Central</option>
+                    <option value="MLB['NL']['westNL']">NL West</option>
+                </select>
+
+                <select id="team-select2">
+                    <option value="">--select--</option>
+                    <option value="MLB['NL']['eastNL'].NYM">NYM</option>
+                    <option value="MLB['NL']['eastNL'].ATL">ATL</option>
+                    <option value="MLB['NL']['eastNL'].WSH">WSH</option>
+                    <option value="MLB['NL']['eastNL'].MIA">MIA</option>
+                    <option value="MLB['NL']['eastNL'].PHI">PHI</option>
+                    <option value="MLB['NL']['centralNL'].CHC">CHC</option>
+                    <option value="MLB['NL']['centralNL'].CIN">CIN</option>
+                    <option value="MLB['NL']['centralNL'].MIL">MIL</option>
+                    <option value="MLB['NL']['centralNL'].PIT">PIT</option>
+                    <option value="MLB['NL']['centralNL'].STL">STL</option>
+                    <option value="MLB['NL']['westNL'].LAD">LAD</option>
+                    <option value="MLB['NL']['westNL'].ARI">ARI</option>
+                    <option value="MLB['NL']['westNL'].COL">COL</option>
+                    <option value="MLB['NL']['westNL'].SD">SD</option>
+                    <option value="MLB['NL']['westNL'].SF">SF</option>
+                </select>
+            <br>
+
+
+
+        <div id='stat-showcase'>
+            
+        </div>
 
         <div class="control-group">
             <label>Single
@@ -51,11 +103,20 @@
     </section>
 
        <script type="text/javascript">
-
+        let check;
         let teamsMLB = {};
         let teamPlayers = {};
-        let roster = {};
- 
+        
+
+       function hideOnLoad() {
+            document.getElementById('division-select1').style.visibility = 'hidden';
+            document.getElementById('division-select2').style.visibility = 'hidden';
+            document.getElementById('team-select1').style.visibility = 'hidden';
+            document.getElementById('team-select2').style.visibility = 'hidden';
+        };
+
+        hideOnLoad();
+
 
         const w1 = 600, h1 = 600, pad1 = 50;
         const w2 = 600, h2 = 600, pad2 = 50;
@@ -161,7 +222,7 @@
                 }
             }
 
-            let NL = {
+           let NL = {
                 eastNL: {
                     ATL: teamsMLB.ATL,
                     MIA: teamsMLB.MIA,
@@ -186,122 +247,84 @@
             }
 
             let MLB = { AL, NL };
+            let leagues = [];
+            let divs;
+            let roster;
             let teams = [];
             let playerEvents = [];
-            let leagues = [];
-            let plays = [];
-
-            if (document.getElementById('league-select').value === "MLB['AL']"){
-                let divisions = Object.values(MLB['AL']);
-
-                divisions.forEach( (div) => {
-                    teams.push(Object.values(div))
-                })
-
-                if  (document.getElementById('division-select').value === "MLB['AL']['eastAL']"){
-
-                    let division = Object.values(MLB['AL']['eastAL'])
-
-                    division.forEach( roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-                    
-                    selectedData = playerEvents;
-                    
-                } else if (document.getElementById('division-select').value === "MLB['AL']['centralAL']"){
-                    let division = Object.values(MLB['AL']['centralAL'])
-
-                    division.forEach(roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-
-                    selectedData = playerEvents;
-
-                } else if (document.getElementById('division-select').value === "MLB['AL']['westAL']") {
-                    let division = Object.values(MLB['AL']['westAL'])
-
-                    division.forEach(roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-
-                    selectedData = playerEvents;
-
-                } else {
-                      teams.forEach(roster => {
-                        roster.forEach(playerEvent => {
-                            playerEvents.push(Object.values(playerEvent))
-                        })
-                    })
-                    selectedData = playerEvents;
-                }
-
-
-            } else if (document.getElementById('league-select').value === "MLB['NL']") {
-                    let divisions = Object.values(MLB['NL']);
-
-                divisions.forEach((div) => {
-                    teams.push(Object.values(div))
-                })
-
-                if (document.getElementById('division-select').value === "MLB['NL']['eastNL']") {
-
-                    let division = Object.values(MLB['NL']['eastNL'])
-
-                    division.forEach(roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-
-                    selectedData = playerEvents;
-
-                } else if (document.getElementById('division-select').value === "MLB['NL']['centralNL']") {
-                    let division = Object.values(MLB['NL']['centralNL'])
-
-                    division.forEach(roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-
-                    selectedData = playerEvents;
-
-                } else if (document.getElementById('division-select').value === "MLB['NL']['westNL']") {
-                    let division = Object.values(MLB['NL']['westNL'])
-
-                    division.forEach(roster => {
-                        playerEvents = Object.values(roster).flat(2)
-                    })
-
-                    selectedData = playerEvents;
-
-                } else {
-                    teams.forEach(roster => {
-                        roster.forEach(playerEvent => {
-                            playerEvents.push(Object.values(playerEvent))
-                        })
-                    })
-                    selectedData = playerEvents;
-                }
-
-            } else {
-                let divisions = [];
-                leagues = Object.values(MLB);
-                leagues.forEach( league => {
-                    divisions.push(Object.values(league))
-                })
-
-                divisions.forEach( div => {
-                    div.forEach( team => {
-                        teams.push(Object.values(team))
-                    })
-                })
-
-                teams.forEach(roster => {
-                    roster.forEach(playerEvent => {
-                        playerEvents.push(Object.values(playerEvent))
-                    })
-                })
-                selectedData = playerEvents;
-            }
             
-            // console.log(selectedData.flat(2))
+            function leagueDataReducer(leagueSelect) {
+                divs = Object.values(eval(leagueSelect));
+                divs.forEach(div => {
+                    teams.push(Object.values(div)
+
+                    )
+                });
+                teams = teams.flat(1);
+
+                teams.forEach(team => {
+                    playerEvents.push(Object.values(team))
+                });
+
+                selectedData = playerEvents.flat(2);
+                return selectedData;
+            };
+
+            function divisionDataReducer(divSelect) {
+                divTeams = Object.values(eval(divSelect));
+                divTeams.forEach(team => {
+                    playerEvents.push(Object.values(team))
+                });
+                selectedData = playerEvents.flat(2);
+                return selectedData;
+            };
+
+            function teamDataReducer(teamSelect) {
+                roster = Object.values(eval(teamSelect));
+                selectedData = roster.flat(1);
+                return selectedData;
+            };        
+            
+            function mlbDataReducer(mlbSelect) {
+                leagues = Object.values(MLB)
+                leagues.forEach(league => {
+                    playerEvents = leagueDataReducer(league);
+                })
+
+                selectedData = playerEvents
+                return selectedData
+            }
+
+            
+             check = () => {
+                leagueOption = document.querySelector('input[ name = "league-select" ]:checked').value;
+                if (leagueOption === 'MLB') {
+                    mlbDataReducer("MLB")
+
+                    document.getElementById('division-select1').style.visibility = 'hidden';
+                    document.getElementById('team-select1').style.visibility = 'hidden';
+                    document.getElementById('division-select2').style.visibility = 'hidden';
+                    document.getElementById('team-select2').style.visibility = 'hidden';
+                } else if (leagueOption === "MLB['AL']") {
+                    leagueDataReducer(leagueOption)
+                    
+                    document.getElementById('division-select1').style.visibility = 'visible';
+                    document.getElementById('team-select1').style.visibility = 'visible';
+                    document.getElementById('division-select2').style.visibility = 'hidden';
+                    document.getElementById('team-select2').style.visibility = 'hidden';
+
+                } else {
+
+                    leagueDataReducer(leagueOption)
+                    document.getElementById('division-select2').style.visibility = 'visible';
+                    document.getElementById('team-select2').style.visibility = 'visible';
+                    document.getElementById('division-select1').style.visibility = 'hidden';
+                    document.getElementById('team-select1').style.visibility = 'hidden';
+                }
+
+            }
+
+            check();
             
             xScale.domain(d3.extent(selectedData, (d) => { return d.launch_speed }));
             yScale.domain([d3.min(selectedData, (d) => { return d.launch_angle }), d3.max(selectedData, (d) => { return d.launch_angle })]);
@@ -317,7 +340,7 @@
                     return yScale(d.launch_angle);
                 })
                 .attr("r", (d) => {
-                    return 1.25;
+                    return 2;
                 })
                 .attr("fill", (d) => {
                     if (d.event === 'field_out') {
@@ -368,7 +391,7 @@
                 .attr("class", (d) => {return d.event; })
                 .attr("cx", (d) => {return xScaleField((d.hc_x - 125.42));})
                 .attr("cy", (d) => {return yScaleField((205 - d.hc_y));})
-                .attr("r", (d) => {return 1.25;})
+                .attr("r", (d) => {return 2;})
                 .attr("fill", (d) => {
                     if (d.event === 'field_out') {
                         return "#ff0000"
@@ -386,6 +409,28 @@
             const updateData = () => {
                 svg.selectAll("circle").remove();
                 svg2.selectAll("circle").remove();
+                
+                divs;
+                roster;
+                teams = [];
+                playerEvents = [];
+
+                if(document.getElementById('division-select1').value || document.getElementById('team-select1').value){
+                    if(document.getElementById('team-select1').value){
+                        divisionDataReducer(document.getElementById('team-select1').value)
+                    } else {
+                        console.log(document.getElementById('division-select1').value)
+                        console.log(divisionDataReducer(document.getElementById('division-select1').value))
+                    }
+                } else if (document.getElementById('division-select1').value || document.getElementById('team-select1').value){
+                     if (document.getElementById('team-select2').value) {
+                        divisionDataReducer(document.getElementById('team-select2').value)
+                    } else {
+                        divisionDataReducer(document.getElementById('division-select2').value)
+                    }
+                } else {
+                    check();
+                }
 
                 const checkboxes = d3.selectAll(".checkbox").nodes()
                 checkboxes.forEach( (box) => {
@@ -403,7 +448,7 @@
                                 return yScale(d.launch_angle);
                             })
                             .attr("r", (d) => {
-                                return 1.25;
+                                return 2;
                             })
                             .attr("fill", (d) => {
                                 if (d.event === 'field_out') {
@@ -426,7 +471,7 @@
                             .attr("class", (d) => { return d.event; })
                             .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
                             .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
-                            .attr("r", (d) => { return 1.25; })
+                            .attr("r", (d) => { return 2; })
                             .attr("fill", (d) => {
                                 if (d.event === 'field_out') {
                                     return "#ff0000"
@@ -445,9 +490,15 @@
                 
             };
 
+            // d3.selectAll(".league-select").on("change", check);
+            // check();
+
             d3.selectAll(".checkbox").on("change", updateData);
-            updateData();     
+            updateData();    
+        
         });
+
+   
     </script>
     </Body>
 
