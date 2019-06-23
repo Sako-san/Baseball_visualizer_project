@@ -1,7 +1,137 @@
 html {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     background-color: #003366;
     color: white;
+    font-family: sans-serif;
 }
 
+h1 {
+   text-align: center;
+}
+
+.league-select {
+    fill: none;
+}
+
+.graphs {
+    display: flex;
+    margin: 50px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+
+.data-set {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 150px;
+
+}
+
+.subset-selector {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: 30px; 
+    width: 200px;
+      margin-left: 15px;
+}
+
+.league-input {
+    display: flex;
+    margin-left: 575px;
+    height: 30px;
+    width: 450px;
+}
+
+
+.biggest-set{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   margin-left: 575px;
+    background-color: darkblue;
+    height: 30px;
+    width: 150px;
+    border-bottom: 1px solid darkgray;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.biggest-set:active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   margin-left: 575px;
+    background-color: green;
+    height: 30px;
+    width: 150px;
+    border-bottom: 1px solid darkgray;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.big-set {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: darkblue;
+    height: 30px;
+    width: 150px;
+}
+
+.big-set:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:green;
+    height: 30px;
+    width: 150px;
+}
+
+.big-set-last {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     background-color: darkblue;
+    height: 30px;
+    width: 150px;
+    border-top: 1px solid darkgray;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.big-set-last:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+    height: 30px;
+    width: 150px;
+    border-top: 1px solid darkgray;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.control-group  {
+    display: flex;
+    margin-left: 455px;
+}
+
+#launch_params {
+    background-color: black;
+    border-radius: 5px;
+}
+
+#field {
+    background-color: black;
+    border-radius: 5px;
+}
+
+.axis text{
+    fill: white;
+}

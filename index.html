@@ -10,71 +10,84 @@
 
     <Body>
         <h1>Baseball Hit Visualizer</h1> 
-                <input type='radio' id="rad1" name='league-select' class='league-select' value="MLB" checked>MLB
+            <form action="" class='data-set'>
+                <label class='biggest-set'>
+                    <input type='radio' id="rad1" name='league-select' class='league-select' value="MLB" checked>MLB
+                </label>
                 <br>
-                <input type='radio' id="rad2" name='league-select' class='league-select' value="MLB['AL']">AL
+                <div class='league-input'>
+                    <label class='big-set'>
+                    <input type='radio' id="rad2" name='league-select' class='league-select' value="MLB['AL']">AL
+                    </label>
+                        <div  class='subset-selector'>
+                        <select id="division-select1" class='division-select'>
+                            <option value="">--select--</option>
+                            <option value="MLB['AL']['eastAL']">AL East</option>
+                            <option value="MLB['AL']['centralAL']">AL Central</option>
+                            <option value="MLB['AL']['westAL']">AL West</option>
+                        </select>
 
-                <select id="division-select1" class='division-select'>
-                    <option value="">--select--</option>
-                    <option value="MLB['AL']['eastAL']">AL East</option>
-                    <option value="MLB['AL']['centralAL']">AL Central</option>
-                    <option value="MLB['AL']['westAL']">AL West</option>
-                </select>
-
-                <select id="team-select1" class='team-select'>
-                    <option value="">--select--</option>
-                    <option value="MLB['AL']['eastAL'].BAL">BAL</option>
-                    <option value="MLB['AL']['eastAL'].BOS">BOS</option>
-                    <option value="MLB['AL']['eastAL'].NYY">NYY</option>
-                    <option value="MLB['AL']['eastAL'].TB">TB</option>
-                    <option value="MLB['AL']['eastAL'].TOR">TOR</option>
-                    <option value="MLB['AL']['centralAL'].CWS">CWS</option>
-                    <option value="MLB['AL']['centralAL'].KC">KC</option>
-                    <option value="MLB['AL']['centralAL'].DET">DET</option>
-                    <option value="MLB['AL']['centralAL'].MIN">MIN</option>
-                    <option value="MLB['AL']['centralAL'].CLE">CLE</option>
-                    <option value="MLB['AL']['westAL'].HOU">HOU</option>
-                    <option value="MLB['AL']['westAL'].TEX">TEX</option>
-                    <option value="MLB['AL']['westAL'].LAA">LAA</option>
-                    <option value="MLB['AL']['westAL'].SEA">SEA</option>
-                    <option value="MLB['AL']['westAL'].OAK">OAK</option>
-                </select>
-
+                        <select id="team-select1" class='team-select'>
+                            <option value="">--select--</option>
+                            <option value="MLB['AL']['eastAL'].BAL">BAL</option>
+                            <option value="MLB['AL']['eastAL'].BOS">BOS</option>
+                            <option value="MLB['AL']['eastAL'].NYY">NYY</option>
+                            <option value="MLB['AL']['eastAL'].TB">TB</option>
+                            <option value="MLB['AL']['eastAL'].TOR">TOR</option>
+                            <option value="MLB['AL']['centralAL'].CWS">CWS</option>
+                            <option value="MLB['AL']['centralAL'].KC">KC</option>
+                            <option value="MLB['AL']['centralAL'].DET">DET</option>
+                            <option value="MLB['AL']['centralAL'].MIN">MIN</option>
+                            <option value="MLB['AL']['centralAL'].CLE">CLE</option>
+                            <option value="MLB['AL']['westAL'].HOU">HOU</option>
+                            <option value="MLB['AL']['westAL'].TEX">TEX</option>
+                            <option value="MLB['AL']['westAL'].LAA">LAA</option>
+                            <option value="MLB['AL']['westAL'].SEA">SEA</option>
+                            <option value="MLB['AL']['westAL'].OAK">OAK</option>
+                        </select>
+                        </div>
+                </div>
                 <br>
-                <input type='radio' id="rad3" name='league-select' class='league-select' value="MLB['NL']">NL
+                <div class='league-input'>
+                    <label class='big-set-last'>
+                    <input type='radio' id="rad3" name='league-select' class='league-select' value="MLB['NL']">NL
+                    </label>
 
-                <select id="division-select2" class='division-select'>
-                    <option value="">--select--</option>
-                    <option value="MLB['NL']['eastNL']">NL East</option>
-                    <option value="MLB['NL']['centralNL']">NL Central</option>
-                    <option value="MLB['NL']['westNL']">NL West</option>
-                </select>
+                        <div class='subset-selector'>
+                        <select id="division-select2" class='division-select'>
+                            <option value="">--select--</option>
+                            <option value="MLB['NL']['eastNL']">NL East</option>
+                            <option value="MLB['NL']['centralNL']">NL Central</option>
+                            <option value="MLB['NL']['westNL']">NL West</option>
+                        </select>
 
-                <select id="team-select2" class='team-select'>
-                    <option value="">--select--</option>
-                    <option value="MLB['NL']['eastNL'].NYM">NYM</option>
-                    <option value="MLB['NL']['eastNL'].ATL">ATL</option>
-                    <option value="MLB['NL']['eastNL'].WSH">WSH</option>
-                    <option value="MLB['NL']['eastNL'].MIA">MIA</option>
-                    <option value="MLB['NL']['eastNL'].PHI">PHI</option>
-                    <option value="MLB['NL']['centralNL'].CHC">CHC</option>
-                    <option value="MLB['NL']['centralNL'].CIN">CIN</option>
-                    <option value="MLB['NL']['centralNL'].MIL">MIL</option>
-                    <option value="MLB['NL']['centralNL'].PIT">PIT</option>
-                    <option value="MLB['NL']['centralNL'].STL">STL</option>
-                    <option value="MLB['NL']['westNL'].LAD">LAD</option>
-                    <option value="MLB['NL']['westNL'].ARI">ARI</option>
-                    <option value="MLB['NL']['westNL'].COL">COL</option>
-                    <option value="MLB['NL']['westNL'].SD">SD</option>
-                    <option value="MLB['NL']['westNL'].SF">SF</option>
-                </select>
+                        <select id="team-select2" class='team-select'>
+                            <option value="">--select--</option>
+                            <option value="MLB['NL']['eastNL'].NYM">NYM</option>
+                            <option value="MLB['NL']['eastNL'].ATL">ATL</option>
+                            <option value="MLB['NL']['eastNL'].WSH">WSH</option>
+                            <option value="MLB['NL']['eastNL'].MIA">MIA</option>
+                            <option value="MLB['NL']['eastNL'].PHI">PHI</option>
+                            <option value="MLB['NL']['centralNL'].CHC">CHC</option>
+                            <option value="MLB['NL']['centralNL'].CIN">CIN</option>
+                            <option value="MLB['NL']['centralNL'].MIL">MIL</option>
+                            <option value="MLB['NL']['centralNL'].PIT">PIT</option>
+                            <option value="MLB['NL']['centralNL'].STL">STL</option>
+                            <option value="MLB['NL']['westNL'].LAD">LAD</option>
+                            <option value="MLB['NL']['westNL'].ARI">ARI</option>
+                            <option value="MLB['NL']['westNL'].COL">COL</option>
+                            <option value="MLB['NL']['westNL'].SD">SD</option>
+                            <option value="MLB['NL']['westNL'].SF">SF</option>
+                        </select>
+                        </div>
+                </div>
             <br>
+            </form>
 
 
-
-        <div id='stat-showcase'>
+        <!-- <div id='stat-showcase'>
             
-        </div>
+        </div> -->
 
         <div class="control-group">
             <label>Single
@@ -96,9 +109,15 @@
                 <input type="checkbox" class="checkbox" value="field_error">
             </label>
         </div>
+
+        
         <section id=team1>
-        <div id='launch_params'></div>
-        <div id ='field'></div>
+        <div class="graphs">
+            
+            <div id='launch_params'></div>
+          
+            <div id ='field'></div>
+        </div>
 
     </section>
 
@@ -316,7 +335,7 @@
                     document.getElementById('team-select1').style.visibility = 'visible';
                     document.getElementById('division-select2').style.visibility = 'hidden';
                     document.getElementById('team-select2').style.visibility = 'hidden';
-                    
+
                 } else {
 
                     leagueDataReducer(leagueOption)
@@ -344,7 +363,21 @@
                     return yScale(d.launch_angle);
                 })
                 .attr("r", (d) => {
-                    return 2;
+                    return 3;
+                })
+                .style("fill-opacity", 0)
+                .attr("stroke", (d) => {
+                    if (d.event === 'field_out') {
+                        return "#ff0000"
+                    } else if (d.event === 'single') {
+                        return "#33B5FF"
+                    } else if (d.event === 'double') {
+                        return "#78AB46"
+                    } else if (d.event === 'triple') {
+                        return "#E5E500"
+                    } else if (d.event === 'home_run') {
+                        return "#C0C0C0"
+                    } else { return "#000000" };
                 })
                 .attr("fill", (d) => {
                     if (d.event === 'field_out') {
@@ -363,17 +396,20 @@
             svg.append("g")
                 .attr("class", "axis")
                 .attr("transform", "translate(0," + (h1 - pad1) + ")")
-                .call(d3.axisBottom(xScale));
+                .call(d3.axisBottom(xScale))
+                .style("fill", 'white');
 
             svg.append("text")
                 .attr("transform", "translate(" + (w1 / 2) + " ," + (h1 - 5) + ")")
                 .style("text-anchor", "middle")
-                .text("Exit Velocity (mph)");
+                .text("Exit Velocity (mph)")
+                .style("fill", 'white');
 
             svg.append("g")
                 .attr("class", "axis")
                 .attr("transform", "translate(" + pad1 + ", 0)")
-                .call(d3.axisLeft(yScale));
+                .call(d3.axisLeft(yScale))
+                .style("fill", 'white');
 
             svg.append("text")
                 .attr("transform", "rotate(-90)")
@@ -381,7 +417,8 @@
                 .attr("x", 0 - (h1 / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Launch Angle (degrees)");
+                .text("Launch Angle (degrees)")
+                .style("fill", 'white');
 
 
             // balls in play fielded location
@@ -394,13 +431,27 @@
                 .append("circle")
                 .attr("class", (d) => {return d.event; })
                 .attr("cx", (d) => {
-                    if ( !(d.hc_x - 125.42)){ return } 
+                    if (!(d.hc_x - 125.42 )) { return }
                     return xScaleField((d.hc_x - 125.42));})
                 .attr("cy", (d) => {
-                    if( !(205 - d.hc_y) ){ return }
+                    if(!(205 - d.hc_y)) { return }
                     return yScaleField((205 - d.hc_y));})
-                .attr("r", (d) => {return 2;})
-                .attr("fill", (d) => {
+                .attr("r", (d) => {return 3;})
+                .style("stroke", (d) => {
+                    if (d.event === 'field_out') {
+                        return "#ff0000"
+                    } else if (d.event === 'single') {
+                        return "#33B5FF"
+                    } else if (d.event === 'double') {
+                        return "#78AB46"
+                    } else if (d.event === 'triple') {
+                        return "#E5E500"
+                    } else if (d.event === 'home_run') {
+                        return "#C0C0C0"
+                    } else { return "#000000" };
+                })
+                .style("fill-opacity", 0)
+                .style("fill", (d) => {
                     if (d.event === 'field_out') {
                         return "#ff0000"
                     } else if (d.event === 'single') {
@@ -457,7 +508,21 @@
                                 return yScale(d.launch_angle);
                             })
                             .attr("r", (d) => {
-                                return 2;
+                                return 3;
+                            })
+                            .style("fill-opacity", 0.1)
+                            .attr("stroke", (d) => {
+                                if (d.event === 'field_out') {
+                                    return "#ff0000"
+                                } else if (d.event === 'single') {
+                                    return "#33B5FF"
+                                } else if (d.event === 'double') {
+                                    return "#78AB46"
+                                } else if (d.event === 'triple') {
+                                    return "#E5E500"
+                                } else if (d.event === 'home_run') {
+                                    return "#C0C0C0"
+                                } else { return "#000000" };
                             })
                             .attr("fill", (d) => {
                                 if (d.event === 'field_out') {
@@ -480,7 +545,21 @@
                             .attr("class", (d) => { return d.event; })
                             .attr("cx", (d) => { return xScaleField((d.hc_x - 125.42)); })
                             .attr("cy", (d) => { return yScaleField((205 - d.hc_y)); })
-                            .attr("r", (d) => { return 2; })
+                            .attr("r", (d) => { return 3; })
+                            .style("fill-opacity", 0.1)
+                            .attr("stroke", (d) => {
+                                if (d.event === 'field_out') {
+                                    return "#ff0000"
+                                } else if (d.event === 'single') {
+                                    return "#33B5FF"
+                                } else if (d.event === 'double') {
+                                    return "#78AB46"
+                                } else if (d.event === 'triple') {
+                                    return "#E5E500"
+                                } else if (d.event === 'home_run') {
+                                    return "#C0C0C0"
+                                } else { return "#000000" };
+                            })
                             .attr("fill", (d) => {
                                 if (d.event === 'field_out') {
                                     return "#ff0000"
