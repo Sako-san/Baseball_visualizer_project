@@ -11,6 +11,24 @@ h1 {
    text-align: center;
 }
 
+.info-session {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 550px;
+}
+
+.form-group {
+    width: 500px;
+}
+
 .league-select {
     fill: none;
 }
@@ -30,7 +48,7 @@ input[type="radio"] {
     flex-direction: column;
     justify-content: center;
     height: 150px;
-
+    align-items: center;
 }
 
 .subset-selector {
@@ -44,7 +62,9 @@ input[type="radio"] {
 
 .league-input {
     display: flex;
-    margin-left: 575px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 215px;
     height: 30px;
     width: 450px;
 }
@@ -54,7 +74,7 @@ input[type="radio"] {
     display: flex;
     justify-content: center;
     align-items: center;
-   margin-left: 575px;
+   /* margin-left: 575px; */
     background-color: darkblue;
     height: 30px;
     width: 150px;
@@ -66,7 +86,7 @@ input[type="radio"] {
     display: flex;
     justify-content: center;
     align-items: center;
-   margin-left: 575px;
+   /* margin-left: 575px; */
     background-color: green;
     height: 30px;
     width: 150px;
@@ -119,7 +139,7 @@ input[type="radio"] {
 
 .control-group  {
     display: flex;
-    margin-left: 455px;
+    justify-content: center;
 }
 
 #launch_params {
