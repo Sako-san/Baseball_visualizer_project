@@ -194,6 +194,10 @@ const dataSet = d3.csv('2019_FullSet.csv', (data) => {
         return selectedData
     }
 
+
+
+
+
     check = () => {
         leagueOption = document.querySelector('input[ name = "league-select" ]:checked').value;
         if (leagueOption === 'MLB') {
@@ -259,7 +263,48 @@ const dataSet = d3.csv('2019_FullSet.csv', (data) => {
 
     let t = d3.select('circles').transition();
 
+    function percentCalc(data) {
+        
+        let ct1 = 0;
+        let ct2 = 0;
+        let ct3 = 0;
+        let ct4 = 0;
+        let o = 0;
+        let e = 0;
+        data.forEach(d => {
+            if (d.event === 'single') {
+                ct1 += 1;
+            } else if (d.event === 'double') {
+                ct2 += 1;
+            } else if (d.event === 'triple') {
+                ct3 += 1;
+            } else if (d.event === 'home_run') {
+                ct4 += 1;
+            } else if (d.event === 'field_out') {
+                o += 1;
+            } else {
+                e += 1;
+            };
+        });
+
+        document.getElementById('total').innerHTML += (" " + data.length );
+        document.getElementById('single').innerHTML += (" " + (100 * (ct1 / data.length)));
+        document.getElementById('double').innerHTML += (" " + (100 * (ct2 / data.length)));
+        document.getElementById('triple').innerHTML += (" " + (100 * (ct3 / data.length)));
+        document.getElementById('homerun').innerHTML += (" " + (100 * (ct4 / data.length)) );
+        document.getElementById('out').innerHTML += (" " + (100 * (o / data.length))); 
+        document.getElementById('error').innerHTML += (" " + (100 * (e / data.length)));
+    };
+
     const updateData = () => {
+
+        document.getElementById('total').innerHTML = 'Total:'
+        document.getElementById('single').innerHTML = 'Singles:'
+        document.getElementById('double').innerHTML = 'Doubles:'
+        document.getElementById('triple').innerHTML = 'Triples:'
+        document.getElementById('homerun').innerHTML = 'Homeruns:'
+        document.getElementById('out').innerHTML = 'Outs:'
+        document.getElementById('error').innerHTML = 'Errors:'
 
         svg.selectAll("circle").remove();
         svg2.selectAll("circle").remove();
@@ -285,6 +330,8 @@ const dataSet = d3.csv('2019_FullSet.csv', (data) => {
         } else {
             check();
         }
+
+        console.log(percentCalc(selectedData));
 
         const checkboxes = d3.selectAll(".checkbox").nodes()
         checkboxes.forEach((box) => {
